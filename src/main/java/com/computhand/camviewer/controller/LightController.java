@@ -5,26 +5,28 @@
  */
 package com.computhand.camviewer.controller;
 
+import com.computhand.camviewer.info.Geometry;
+import com.computhand.camviewer.info.Light;
+import com.computhand.camviewer.info.LightProperties;
 import com.computhand.camviewer.parser.OpenDataParser;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
  * @author wallace
  */
-@Controller
-@RequestMapping(value = "/data", produces="application/json;charset=UTF-8")
+@RestController
+@RequestMapping(value = "/", produces="application/json;charset=UTF-8")
 public class LightController {
     
     @Autowired
     private OpenDataParser parser;
+    
+    private Light light;
     
     private static final Logger LOG = LoggerFactory.getLogger(LightController.class);
     
@@ -32,13 +34,32 @@ public class LightController {
         LOG.info("have been scanned");
     }
     
-    @RequestMapping(value = "/light")
-    @ResponseBody
-    public String getLightPosition() {
+    
+    public Light getLight() {
+        if(light == null){
+            light = parser.getLight();
+        }
         
-        String ligther = parser.getLightPosition().toJSONString();
+        return light;
+    }
+    
+    public void setLight(Light light){
+        this.light = light;
+    }
+    
+    @RequestMapping(value = "/geometry")
+    public Geometry getGeometry(){
+        return getLight().getGeometry();
+    }
+    
+    @RequestMapping(value = "/properties")
+    public LightProperties getLightProperties(){
         
-        return ligther;
+        LightProperties lightProperties = getLight().getLightProperties();
+        
+        setLight(null);
+        
+        return lightProperties;
     }
     
 }

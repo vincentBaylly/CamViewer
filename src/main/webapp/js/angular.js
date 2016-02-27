@@ -3,11 +3,11 @@ angular.module('site', [])
         .controller('lightCtrl', function ($scope, $http) {
 
             $scope.getLights = function () {
-                $http.get('/CamViewer/data/light').success(function (response) {
-                    $scope.lights = response;
+                $http.get('/CamViewer/data/geometry').success(function (response) {
+                    $scope.geometry = response;
 
-                    var latitude = $scope.lights.coordinates[1];
-                    var longitude = $scope.lights.coordinates[0];
+                    var latitude = $scope.geometry.latitude;
+                    var longitude = $scope.geometry.longitude;
 
                     var mapDiv = document.getElementById('map');
                     var map = new google.maps.Map(mapDiv, {
@@ -21,6 +21,12 @@ angular.module('site', [])
                         map: map
                     });
 
+                }).error(function () {
+                    //handle error
+                })
+                
+                $http.get('/CamViewer/data/properties').success(function (response) {
+                    $scope.properties = response;
                 }).error(function () {
                     //handle error
                 })

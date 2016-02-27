@@ -5,13 +5,16 @@
  */
 package com.computhand.camviewer.parser;
 
+import com.computhand.camviewer.info.Geometry;
+import com.computhand.camviewer.info.Light;
+import com.computhand.camviewer.info.LightProperties;
+import com.computhand.camviewer.utils.CamViewerUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Random;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -89,60 +92,101 @@ public class OpenDataParser {
      *
      * @return JSONArray
      */
-    public JSONObject getLightPosition() {
+    public Light getLight() {
 
         JSONParser parser = new JSONParser();
 
         StringBuilder json = callService();
 
-        JSONObject geometry = null;
+        Light light = null;
 
         Object trafficCamInfo;
         try {
             trafficCamInfo = parser.parse(json.toString());
             JSONObject trafficCamInfoJSON = (JSONObject) trafficCamInfo;
 
-            //LOG.debug(trafficCamInfoJSON.get("features").toString());
             JSONArray features = (JSONArray) trafficCamInfoJSON.get("features");
+            LOG.debug(features.toString());
 
-            //LOG.debug(features.get(1).toString());        
-            JSONObject feature1 = (JSONObject) features.get(randInt(0, 1000));
+            int lightNumber = CamViewerUtils.randInt(0, 303);
 
-            LOG.debug(feature1.get("geometry").toString());
-            geometry = (JSONObject) feature1.get("geometry");
+            JSONObject feature = (JSONObject) features.get(lightNumber);
+            LOG.debug(feature.toString());
 
-            LOG.debug(geometry.get("coordinates").toString());
-            JSONArray coordinates = (JSONArray) geometry.get("coordinates");
+            JSONObject geometryValue = (JSONObject) feature.get("geometry");
+            LOG.debug(geometryValue.toString());
 
-            LOG.debug("Latitude : " + coordinates.get(0).toString() + ", Longitude : " + coordinates.get(1).toString());
+            JSONObject propertiesValue = (JSONObject) feature.get("properties");
+            LOG.debug(geometryValue.toString());
+
+            //Populate Light Values
+            light = new Light();
+
+            light.setGeometry(populateGeometry(geometryValue));
+
+            light.setLightProperties(populateLightProperties(propertiesValue));
 
         } catch (ParseException ex) {
             LOG.error("json parsing want wrong", ex);
         }
 
+        return light;
+    }
+
+    /**
+     * Populate Geometry Object.
+     *
+     * @param geometryValue
+     * @return Geometry
+     */
+    private Geometry populateGeometry(JSONObject geometryValue) {
+
+        JSONArray coordinates = (JSONArray) geometryValue.get("coordinates");
+        LOG.debug("Latitude : " + coordinates.get(0).toString() + ", Longitude : " + coordinates.get(1).toString());
+
+        Geometry geometry = new Geometry();
+        geometry.setType(geometryValue.get("type").toString());
+        geometry.setLatitude(Float.valueOf(coordinates.get(1).toString()));
+        geometry.setLongitude(Float.valueOf(coordinates.get(0).toString()));
+
         return geometry;
     }
 
     /**
-     * Returns a psuedo-random number between min and max, inclusive. The
-     * difference between min and max can be at most
-     * <code>Integer.MAX_VALUE - 1</code>.
+     * Populate LightProperties Object.
      *
-     * @param min Minimim value
-     * @param max Maximim value. Must be greater than min.
-     * @return Integer between min and max, inclusive.
-     * @see java.util.Random#nextInt(int)
+     * @param propertiesValue
+     * @return LightProperties
      */
-    public static int randInt(int min, int max) {
+    private LightProperties populateLightProperties(JSONObject propertiesValue) {
 
-        // Usually this can be a field rather than a method variable
-        Random rand = new Random();
+        LightProperties lightProperties = new LightProperties();
 
-        // nextInt is normally exclusive of the top value,
-        // so add 1 to make it inclusive
-        int randomNum = rand.nextInt((max - min) + 1) + min;
+        try {
 
-        return randomNum;
+            lightProperties.setNumberId(Integer.valueOf(propertiesValue.get("nid").toString()));
+
+//            lightProperties.setMontrealLightSite(new URL(propertiesValue.get("url").toString()));
+
+            lightProperties.setTitle(propertiesValue.get("titre").toString());
+            lightProperties.setCameraId(Integer.valueOf(propertiesValue.get("id-camera").toString()));
+            lightProperties.setBoroughNumber(Integer.valueOf(propertiesValue.get("id-arrondissement").toString()));
+            //lightProperties.setDescription(propertiesValue.get("description").toString());
+            lightProperties.setNorthSouthStreet(propertiesValue.get("axe-routier-nord-sud").toString());
+            lightProperties.setEastWestStreet(propertiesValue.get("axe-routier-est-ouest").toString());
+            lightProperties.setUrlImageLive(new URL(propertiesValue.get("url-image-en-direct").toString()));
+            lightProperties.setUrlImageNorth(new URL(propertiesValue.get("url-image-direction-nord").toString()));
+            lightProperties.setUrlImageEast(new URL(propertiesValue.get("url-image-direction-est").toString()));
+            lightProperties.setUrlImageSouth(new URL(propertiesValue.get("url-image-direction-sud").toString()));
+            lightProperties.setUrlImageWest(new URL(propertiesValue.get("url-image-direction-ouest").toString()));
+
+        } catch (MalformedURLException ex) {
+            LOG.error("an error occured during populate Light Properties", ex);
+        } catch (Exception ex) {
+            LOG.error("an error occured during populate Light Properties", ex);
+        }
+
+        return lightProperties;
+
     }
-
 }
