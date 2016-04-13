@@ -8,7 +8,8 @@ package com.computhand.camviewer.controller;
 import com.computhand.camviewer.info.Geometry;
 import com.computhand.camviewer.info.Light;
 import com.computhand.camviewer.info.LightProperties;
-import com.computhand.camviewer.parser.OpenDataParser;
+import com.computhand.camviewer.service.LightCamService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LightController {
     
     @Autowired
-    private OpenDataParser parser;
+    private LightCamService parser;
     
     private Light light;
     

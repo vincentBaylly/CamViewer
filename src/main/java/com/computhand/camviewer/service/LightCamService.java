@@ -3,18 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.computhand.camviewer.parser;
+package com.computhand.camviewer.service;
 
-import com.computhand.camviewer.info.Geometry;
-import com.computhand.camviewer.info.Light;
-import com.computhand.camviewer.info.LightProperties;
-import com.computhand.camviewer.utils.CamViewerUtils;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -23,68 +16,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.computhand.camviewer.info.Geometry;
+import com.computhand.camviewer.info.Light;
+import com.computhand.camviewer.info.LightProperties;
+import com.computhand.camviewer.utils.CamViewerUtils;
+
 /**
  *
  * @author wallace
  */
 @Component
-public class OpenDataParser {
+public class LightCamService extends ServiceCaller{
 
-    private static final Logger LOG = LoggerFactory.getLogger(OpenDataParser.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LightCamService.class);
 
-    public OpenDataParser() {
+    public LightCamService() {
         LOG.info("have been scanned");
-    }
-
-    /**
-     * Call the camera information service for Montreal open data.
-     *
-     * @return StringBuilder the JSON service output.
-     */
-    public static StringBuilder callService() throws RuntimeException {
-
-        //TODO add to properties file
-        String camInfoURL = "http://ville.montreal.qc.ca/circulation/sites/ville.montreal.qc.ca.circulation/files/cameras-de-circulation.json";
-
-        StringBuilder output = null;
-
-        try {
-
-            URL url = new URL(camInfoURL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Accept", "application/json");
-
-            if (conn.getResponseCode() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : "
-                        + conn.getResponseCode());
-            }
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
-
-            output = new StringBuilder();
-            String out;
-            LOG.debug("Output from Server .... \n");
-            while ((out = br.readLine()) != null) {
-                output.append(out);
-                LOG.debug(out);
-            }
-
-            conn.disconnect();
-
-        } catch (MalformedURLException ex) {
-
-            LOG.error("the url to call is not valid : " + camInfoURL, ex);
-
-        } catch (IOException ex) {
-
-            LOG.error("json reading want wrong", ex);
-
-        }
-
-        return output;
-
     }
 
     /**
@@ -96,7 +43,7 @@ public class OpenDataParser {
 
         JSONParser parser = new JSONParser();
 
-        StringBuilder json = callService();
+        StringBuilder json = callService("camInfoURL");
 
         Light light = null;
 
@@ -117,7 +64,7 @@ public class OpenDataParser {
             LOG.debug(geometryValue.toString());
 
             JSONObject propertiesValue = (JSONObject) feature.get("properties");
-            LOG.debug(geometryValue.toString());
+            LOG.debug(propertiesValue.toString());
 
             //Populate Light Values
             light = new Light();
