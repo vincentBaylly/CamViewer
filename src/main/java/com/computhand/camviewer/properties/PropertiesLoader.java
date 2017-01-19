@@ -14,7 +14,7 @@ public class PropertiesLoader {
     private static final Logger LOG = LoggerFactory
             .getLogger(PropertiesLoader.class);
 
-    private static final String PROP_FILE = "src/main/resources/serviceinfo.properties";
+    private static final String PROP_FILE = "/home/dev/git/CamViewer/src/main/resources/serviceinfo.properties";
 
     private Properties prop = new Properties();
     private InputStream input;

@@ -7,6 +7,9 @@ package com.computhand.camviewer.service;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -78,6 +81,59 @@ public class LightCamService extends ServiceCaller{
         }
 
         return light;
+    }
+    
+    /**
+     * Get the position of the light to add it on the map.
+     *
+     * @return JSONArray
+     */
+    @SuppressWarnings("unchecked")
+	public List<Light> getLights() {
+
+        JSONParser parser = new JSONParser();
+
+        StringBuilder json = callService("camInfoURL");
+
+        List<Light> lights = new ArrayList<Light>();
+
+        Object trafficCamInfo;
+        try {
+            trafficCamInfo = parser.parse(json.toString());
+            JSONObject trafficCamInfoJSON = (JSONObject) trafficCamInfo;
+
+            JSONArray features = (JSONArray) trafficCamInfoJSON.get("features");
+            LOG.debug(features.toString());
+
+            //int lightNumber = CamViewerUtils.randInt(0, 303);
+            
+            
+            for(Iterator<JSONObject> iterator = features.iterator(); iterator.hasNext();){
+            	
+	            JSONObject feature = iterator.next();
+	            LOG.debug(feature.toString());
+	
+	            JSONObject geometryValue = (JSONObject) feature.get("geometry");
+	            LOG.debug(geometryValue.toString());
+	
+	            JSONObject propertiesValue = (JSONObject) feature.get("properties");
+	            LOG.debug(propertiesValue.toString());
+	
+	            //Populate Light Values
+	            Light light = new Light();
+	
+	            light.setGeometry(populateGeometry(geometryValue));
+	
+	            light.setLightProperties(populateLightProperties(propertiesValue));
+	            
+	            lights.add(light);
+            }
+
+        } catch (ParseException ex) {
+            LOG.error("json parsing want wrong", ex);
+        }
+
+        return lights;
     }
 
     /**
