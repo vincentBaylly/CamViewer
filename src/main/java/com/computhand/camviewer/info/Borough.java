@@ -7,13 +7,13 @@ public class Borough {
 	private List<float[]> coordinates;
 	private String nom;
 	private String type;
-	private int codeId;
+	private String codeId;
 	private String abrev;
-	private int num;
+	private long num;
 	private String codeMamrot;
-	private float aire;
-	private int munId;
-	private float perim;
+	private double aire;
+	private long munId;
+	private double perim;
 	
 	/**
 	 * @return the coordinates
@@ -54,13 +54,13 @@ public class Borough {
 	/**
 	 * @return the codeId
 	 */
-	public int getCodeId() {
+	public String getCodeId() {
 		return codeId;
 	}
 	/**
 	 * @param codeId the codeId to set
 	 */
-	public void setCodeId(int codeId) {
+	public void setCodeId(String codeId) {
 		this.codeId = codeId;
 	}
 	/**
@@ -78,13 +78,13 @@ public class Borough {
 	/**
 	 * @return the num
 	 */
-	public int getNum() {
+	public long getNum() {
 		return num;
 	}
 	/**
 	 * @param num the num to set
 	 */
-	public void setNum(int num) {
+	public void setNum(long num) {
 		this.num = num;
 	}
 	/**
@@ -102,37 +102,37 @@ public class Borough {
 	/**
 	 * @return the aire
 	 */
-	public float getAire() {
+	public double getAire() {
 		return aire;
 	}
 	/**
 	 * @param aire the aire to set
 	 */
-	public void setAire(float aire) {
+	public void setAire(double aire) {
 		this.aire = aire;
 	}
 	/**
 	 * @return the munId
 	 */
-	public int getMunId() {
+	public long getMunId() {
 		return munId;
 	}
 	/**
 	 * @param munId the munId to set
 	 */
-	public void setMunId(int munId) {
+	public void setMunId(long munId) {
 		this.munId = munId;
 	}
 	/**
 	 * @return the perim
 	 */
-	public float getPerim() {
+	public double getPerim() {
 		return perim;
 	}
 	/**
 	 * @param perim the perim to set
 	 */
-	public void setPerim(float perim) {
+	public void setPerim(double perim) {
 		this.perim = perim;
 	}
 	

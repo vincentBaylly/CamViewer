@@ -14,7 +14,7 @@ import com.computhand.camviewer.properties.PropertiesLoader;
 
 public abstract class ServiceCaller {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(BoroughService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ServiceCaller.class);
 	
     /**
      * Call the borough finder service.

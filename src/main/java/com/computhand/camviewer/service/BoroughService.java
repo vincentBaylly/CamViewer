@@ -9,9 +9,16 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.computhand.camviewer.info.Borough;
 
+/**
+ * 
+ * @author wallace
+ *
+ */
+@Component
 public class BoroughService extends ServiceCaller{
 	
 	private static final Logger LOG = LoggerFactory.getLogger(BoroughService.class);
@@ -21,7 +28,7 @@ public class BoroughService extends ServiceCaller{
      *
      * @return JSONArray
      */
-    public List<Borough> getLight() {
+    public List<Borough> getBoroughs() {
 
         JSONParser parser = new JSONParser();
 
@@ -46,25 +53,29 @@ public class BoroughService extends ServiceCaller{
                 JSONObject geometryValue = (JSONObject) boroughJson.get("geometry");
                 LOG.debug(geometryValue.toString());
                 
-                JSONArray coordinates = (JSONArray)geometryValue.get("coordinates");
-                borough.setCoordinates(new ArrayList<float[]>());
-                for(Object coordinate: coordinates){
-                	JSONArray coordinateJson = (JSONArray) coordinate;
-                	float[] coordinateValue = {(Float) coordinateJson.get(0), (Float)coordinateJson.get(1)}; 
-                	borough.getCoordinates().add(coordinateValue);
-                }
+//                JSONArray coordinates = (JSONArray)geometryValue.get("coordinates");
+//                borough.setCoordinates(new ArrayList<float[]>());
+//                JSONArray coordinateJson = (JSONArray) coordinates.get(0);
+//                JSONArray coordinateJson = (JSONArray) coordinates.get(0);
+//                JSONArray coordinateJson = (JSONArray) coordinates.get(0);
+//                for(Object coordinate: coordinates){
+//                	JSONArray coordinateJson = (JSONArray) coordinate;
+//                	coordinateJson.get
+//                	float[] coordinateValue = {(Float) coordinateJson.get(0), (Float)coordinateJson.get(1)}; 
+//                	borough.getCoordinates().add(coordinateValue);
+//                }
 
                 JSONObject propertiesValue = (JSONObject) boroughJson.get("properties");
                 LOG.debug(propertiesValue.toString());
                 borough.setNom((String) propertiesValue.get("NOM"));
                 borough.setType((String) propertiesValue.get("TYPE"));
-                borough.setCodeId((Integer) propertiesValue.get("CODEID"));
+                borough.setCodeId((String) propertiesValue.get("CODEID"));
                 borough.setAbrev((String) propertiesValue.get("ABREV"));
-                borough.setNum((Integer) propertiesValue.get("NUM"));
+                borough.setNum(((Long)propertiesValue.get("NUM")).longValue());
                 borough.setCodeMamrot((String) propertiesValue.get("CODEMAMROT"));
-                borough.setAire((Float) propertiesValue.get("AIRE"));
-                borough.setMunId((Integer) propertiesValue.get("MUNID"));
-                borough.setPerim((Float) propertiesValue.get("PERIM"));
+                borough.setAire(((Double)propertiesValue.get("AIRE")).doubleValue());
+                borough.setMunId(((Long)propertiesValue.get("MUNID")).longValue());
+                borough.setPerim(((Double)propertiesValue.get("PERIM")).doubleValue());
                 
                 boroughs.add(borough);
                 

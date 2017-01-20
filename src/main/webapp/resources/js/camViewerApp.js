@@ -1,0 +1,1 @@
+var camViewerApp = angular.module('site', []);

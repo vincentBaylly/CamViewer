@@ -1,9 +1,7 @@
-angular.module('site', [])
-
-.controller('lightCtrl', function($scope, $http) {
+camViewerApp.controller('lightCtrl', function($scope, $http) {
 
 	$scope.getLight = function() {
-		$http.get('/CamViewer/data/geometry').success(function(response) {
+		$http.get('/CamViewer/data/light/geometry').success(function(response) {
 			$scope.geometry = response;
 
 			var latitude = $scope.geometry.latitude;
@@ -28,15 +26,15 @@ angular.module('site', [])
 			// handle error
 		})
 
-		$http.get('/CamViewer/data/properties').success(function(response) {
+		$http.get('/CamViewer/data/light/properties').success(function(response) {
 			$scope.properties = response;
 		}).error(function() {
 			// handle error
 		})
 	};
 
-	$scope.getGeometriess = function() {
-		$http.get('/CamViewer/data/geometries').success(function(response) {
+	$scope.getGeometries = function() {
+		$http.get('/CamViewer/data/light/geometries').success(function(response) {
 			$scope.geometries = response;
 
 			if (typeof polySelected !== "undefined") {
@@ -67,7 +65,7 @@ angular.module('site', [])
 	};
 
 	$scope.getLights = function() {
-		$http.get('/CamViewer/data/lightsinfo').success(function(response) {
+		$http.get('/CamViewer/data/light/infos').success(function(response) {
 			$scope.lightsinfo = response;
 
 			if (typeof polySelected !== "undefined") {
@@ -92,6 +90,7 @@ angular.module('site', [])
 
 							marker.addListener('click', function() {
 								$scope.properties = properties;
+								$('#map').css('height', getParentDivHeight());
 								$scope.$apply();
 							});
 
