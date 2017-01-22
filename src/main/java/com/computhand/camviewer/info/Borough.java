@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Borough {
 	
-	private List<float[]> coordinates;
+	private List<double[]> coordinates;
 	private String nom;
 	private String type;
 	private String codeId;
@@ -18,13 +18,13 @@ public class Borough {
 	/**
 	 * @return the coordinates
 	 */
-	public List<float[]> getCoordinates() {
+	public List<double[]> getCoordinates() {
 		return coordinates;
 	}
 	/**
 	 * @param coordinates the coordinates to set
 	 */
-	public void setCoordinates(List<float[]> coordinates) {
+	public void setCoordinates(List<double[]> coordinates) {
 		this.coordinates = coordinates;
 	}
 	/**

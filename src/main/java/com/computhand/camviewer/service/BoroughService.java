@@ -53,17 +53,16 @@ public class BoroughService extends ServiceCaller{
                 JSONObject geometryValue = (JSONObject) boroughJson.get("geometry");
                 LOG.debug(geometryValue.toString());
                 
-//                JSONArray coordinates = (JSONArray)geometryValue.get("coordinates");
-//                borough.setCoordinates(new ArrayList<float[]>());
-//                JSONArray coordinateJson = (JSONArray) coordinates.get(0);
-//                JSONArray coordinateJson = (JSONArray) coordinates.get(0);
-//                JSONArray coordinateJson = (JSONArray) coordinates.get(0);
-//                for(Object coordinate: coordinates){
-//                	JSONArray coordinateJson = (JSONArray) coordinate;
-//                	coordinateJson.get
-//                	float[] coordinateValue = {(Float) coordinateJson.get(0), (Float)coordinateJson.get(1)}; 
-//                	borough.getCoordinates().add(coordinateValue);
-//                }
+                JSONArray firstArray = (JSONArray)geometryValue.get("coordinates");
+                borough.setCoordinates(new ArrayList<double[]>());
+                JSONArray secondArray = (JSONArray) firstArray.get(0);
+                //JSONArray thridArray = (JSONArray) secondArray.get(0);
+                JSONArray coordinateBorough = (JSONArray) secondArray.get(0);
+                for(Object coordinate: coordinateBorough){
+                	JSONArray coordinateJson = (JSONArray) coordinate;
+                	double[] coordinateValue = {((Double)coordinateJson.get(0)).doubleValue(), ((Double)coordinateJson.get(1)).doubleValue()}; 
+                	borough.getCoordinates().add(coordinateValue);
+                }
 
                 JSONObject propertiesValue = (JSONObject) boroughJson.get("properties");
                 LOG.debug(propertiesValue.toString());

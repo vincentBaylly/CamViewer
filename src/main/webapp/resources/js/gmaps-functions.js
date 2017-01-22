@@ -113,32 +113,37 @@ function initMap() {
 				paths : coord
 			});
 			if (google.maps.geometry.poly.containsLocation(e.latLng, poly)) {
-
-				polySelected = poly;
 				
-				clearMarkers();
-
-				//console.log("Position : " + e.latLng + " arrondissement " + feature.getProperty("NOM"));
-				if (!google.maps.Polygon.prototype.getBounds) {
-					google.maps.Polygon.prototype.getBounds = function() {
-						var bounds = new google.maps.LatLngBounds();
-						this.getPath().forEach(function(element, index) {
-							bounds.extend(element);
-						});
-						return bounds;
-					}
-				}
-
-				polySelected.setOptions({
-					fillColor : 'red'
-				});
-				map.setCenter(polySelected.getBounds().getCenter());
-				if(map.getZoom() < 11){
-					map.setZoom(11);
-				}
+				//console.log("Position : " + e.latLng + " borough " + feature.getProperty("NOM"));
+				selectedPolyOnMap(poly);
 			}
 		});
 	});
+}
+
+function selectedPolyOnMap(poly){
+	
+//	clearMarkers();
+	
+	polySelected = poly;
+
+	if (!google.maps.Polygon.prototype.getBounds) {
+		google.maps.Polygon.prototype.getBounds = function() {
+			var bounds = new google.maps.LatLngBounds();
+			this.getPath().forEach(function(element, index) {
+				bounds.extend(element);
+			});
+			return bounds;
+		}
+	}
+
+	polySelected.setOptions({
+		fillColor : 'red'
+	});
+	map.setCenter(polySelected.getBounds().getCenter());
+	if(map.getZoom() < 11){
+		map.setZoom(11);
+	}
 }
 
 google.maps.event.addDomListener(window, 'load', initMap);
